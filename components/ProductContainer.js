@@ -123,7 +123,9 @@ export default function ProductContainer({ initialProducts }) {
       {/* Pesan jika hasil pencarian kosong */}
       {products.length === 0 && query.length > 2 && !isLoading && (
         <div className="text-center text-muted-foreground col-span-2 p-10 border border-dashed rounded-lg">
-          <p>😞 Produk tidak ditemukan yang cocok dengan **"{query}"**.</p>
+          <p>
+            Produk tidak ditemukan yang cocok dengan <span className="font-semibold">{`"${query}"`}</span>.
+          </p>
         </div>
       )}
     </div>
