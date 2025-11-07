@@ -19,15 +19,16 @@ module.exports = {
       },
     },
     extend: {
+      // PENERAPAN FONT BARU
       fontFamily: {
-        // 'sans' akan menggunakan Galano Classic
-        sans: ['"Galano Classic"', 'sans-serif'], 
+        sans: ['var(--font-stack-sans)', 'sans-serif'], 
       },
+      // ... (sisa extend lainnya) ...
       colors: {
         gray: colors.gray, 
         slate: colors.slate, 
-        // ... (sisanya sama)
         border: "var(--border)",
+        // ... (sisanya sama untuk primary, secondary, dst.)
         input: "var(--input)",
         ring: "var(--ring)",
         background: "var(--background)",
@@ -66,6 +67,7 @@ module.exports = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      // ... (sisanya sama untuk keyframes dan animation)
       keyframes: {
         "accordion-down": {
           from: { height: "0" },

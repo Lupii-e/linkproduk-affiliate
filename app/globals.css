@@ -3,15 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  /* --- CUSTOM FONT FACE (GALANO CLASSIC) --- */
-  @font-face {
-    font-family: 'Galano Classic';
-    /* Ganti ekstensi file ini (.woff2) jika file Anda berbeda (e.g., .otf) */
-    src: url('/fonts/GalanoClassic-Regular.woff2') format('woff2'); 
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-  }
+  
   
   /* --- DARK MODE COLORS --- */
   :root {
