@@ -3,23 +3,22 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image'; 
-import { Input } from "@/components/ui/input"; // Menggunakan input Shadcn untuk styling
+import { Input } from "@/components/ui/input"; 
 import { Search } from 'lucide-react'; 
 
 // --- Sub-Komponen: ProductCard ---
-// Kartu produk yang langsung mengarahkan ke link affiliate sambil melacak klik
 function ProductCard({ product }) {
   
   // URL placeholder yang aman
   const PLACEHOLDER_URL = 'https://i.imgur.com/g8T0t6a.png'; 
   
-  // Tentukan URL yang akan digunakan (jika URL database kosong, pakai placeholder)
+  // Tentukan URL yang akan digunakan (ini mengatasi bug gambar yang membandel)
   const safeImageUrl = product.gambar_url || PLACEHOLDER_URL;
 
   // Fungsi Pelacakan Klik dan Redirect
   const handleClick = async (e) => {
-    e.preventDefault(); // Hentikan aksi link default
-
+    e.preventDefault(); 
+    
     // 1. Panggil API Pelacakan Klik (Asynchronously di background)
     fetch(`/api/click/${product._id}`, {
       method: 'POST',
@@ -30,7 +29,6 @@ function ProductCard({ product }) {
   };
 
   return (
-    // Card Produk (Tag <a> memanggil handleClick)
     <a
       href={product.link_affiliate}
       onClick={handleClick} // Panggil fungsi pelacakan
@@ -39,17 +37,17 @@ function ProductCard({ product }) {
       className="bg-card rounded-lg shadow-md overflow-hidden border border-border transition-all hover:scale-[1.02] hover:shadow-xl duration-200"
     >
       
-      {/* BAGIAN GAMBAR YANG SUDAH DISEDERHANAKAN */}
+      {/* BAGIAN GAMBAR */}
       <div className="aspect-square w-full relative">
         <Image
           src={safeImageUrl} 
-          alt={product.nama_produk()}
+          alt={product.nama_produk} 
           fill 
           sizes="(max-width: 768px) 50vw, 33vw"
           style={{ objectFit: 'cover' }} 
           className="bg-muted"
           priority={false}
-          // Tambahkan key untuk mengatasi caching Next.js yang membandel
+          // Key ini mengatasi masalah caching Next.js saat live search
           key={safeImageUrl} 
         />
       </div>
@@ -80,7 +78,8 @@ export default function ProductContainer({ initialProducts }) {
             fetch(`/api/search?q=${query}`)
               .then(res => res.json())
               .then(data => {
-                setProducts(data); 
+                // Perbaikan Array.isArray() untuk build safety
+                setProducts(Array.isArray(data) ? data : []); 
                 setIsLoading(false);
               })
               .catch(() => setIsLoading(false));
@@ -115,7 +114,7 @@ export default function ProductContainer({ initialProducts }) {
       
       {/* 2. GRID PRODUK (Otomatis ter-filter) */}
       <div className="grid grid-cols-2 gap-4 w-full max-w-lg">
-        {products.map((product) => (
+        {products && products.map((product) => ( // Perbaikan untuk safety
           <ProductCard key={product._id.toString()} product={product} />
         ))}
       </div>
@@ -123,9 +122,7 @@ export default function ProductContainer({ initialProducts }) {
       {/* Pesan jika hasil pencarian kosong */}
       {products.length === 0 && query.length > 2 && !isLoading && (
         <div className="text-center text-muted-foreground col-span-2 p-10 border border-dashed rounded-lg">
-          <p>
-            Produk tidak ditemukan yang cocok dengan <span className="font-semibold">{`"${query}"`}</span>.
-          </p>
+          <p>😞 Produk tidak ditemukan yang cocok dengan <span className="font-semibold">{`"${query}"`}</span>.</p>
         </div>
       )}
     </div>
