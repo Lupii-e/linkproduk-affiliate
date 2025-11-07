@@ -1,12 +1,15 @@
-export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
-import clientPromise from '../../../lib/mongodb';
+import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb'; 
+
+// PENTING: Menghindari Build Error di Vercel
+export const dynamic = 'force-dynamic';
 
 // --- FUNGSI GET (Mencari produk menggunakan Atlas Search) ---
 export async function GET(request) {
   try {
-    const { searchParams } = new URL(request.url);
+    // FIX: Menggunakan request.url memaksa render dinamis
+    const { searchParams } = new URL(request.url); 
     const query = searchParams.get('q');
 
     if (!query) {
@@ -16,9 +19,9 @@ export async function GET(request) {
     }
 
     const client = await clientPromise;
-    const db = client.db("db_afiliasi"); // <-- Pastikan nama DB Anda benar
+    const db = client.db("db_afiliasi"); 
 
-    // Ini adalah "Pipeline" untuk Atlas Search
+    // Ini adalah Pipeline untuk Atlas Search
     const pipeline = [
       {
         $search: {
@@ -31,7 +34,7 @@ export async function GET(request) {
         }
       },
       {
-        // PENTING: Hanya kembalikan produk yang memiliki URL gambar yang valid
+        // FIX: Hanya kembalikan produk yang memiliki URL gambar yang valid
         $match: {
           gambar_url: { $ne: null, $ne: "" } 
         }
@@ -43,14 +46,13 @@ export async function GET(request) {
           nama_produk: 1,
           kategori: 1,
           harga: 1,
-          gambar_url: 1, // Pastikan field gambar dikembalikan
+          gambar_url: 1, 
           link_affiliate: 1,
-          click_count: 1 // Sertakan ini untuk konsistensi
+          click_count: 1
         }
       }
     ];
 
-    // Jalankan pencarian menggunakan "aggregate"
     const products = await db.collection("products").aggregate(pipeline).toArray();
 
     return NextResponse.json(products, { status: 200 });
