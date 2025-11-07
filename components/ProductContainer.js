@@ -43,7 +43,7 @@ function ProductCard({ product }) {
       <div className="aspect-square w-full relative">
         <Image
           src={safeImageUrl} 
-          alt={product.nama_produk}
+          alt={product.nama_produk()}
           fill 
           sizes="(max-width: 768px) 50vw, 33vw"
           style={{ objectFit: 'cover' }} 

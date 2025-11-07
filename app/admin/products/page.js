@@ -287,7 +287,7 @@ export default function ProductsPage() {
                             <AlertDialogHeader>
                               <AlertDialogTitle>Anda Yakin?</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Tindakan ini tidak bisa dibatalkan. Ini akan menghapus produk "{product.nama_produk}" secara permanen.
+                                Tindakan ini tidak bisa dibatalkan. Ini akan menghapus produk `{product.nama_produk}` secara permanen.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
