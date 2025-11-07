@@ -10,14 +10,22 @@ export default async function Page() {
   try {
     const client = await clientPromise;
     const db = client.db("db_afiliasi"); // <-- Pastikan nama DB Anda benar
+    
+    // FIX PENTING: Hanya ambil produk yang memiliki nama dan pastikan itu array yang valid
     products = await db
       .collection("products")
-      .find({})
+      .find({ nama_produk: { $ne: null, $ne: "" } }) // Filter data rusak saat build
       .sort({ _id: -1 })
       .toArray();
+
+    // Verifikasi final: jika bukan array, jadikan array kosong
+    if (!Array.isArray(products)) {
+        products = [];
+    }
+
   } catch (e) {
     console.error("Gagal fetch produk di homepage:", e);
-    // Jika fetch gagal, products tetap array kosong, mencegah error di map()
+    // Jika fetch gagal (misalnya koneksi), products tetap array kosong
   }
 
   // Next.js memerlukan JSON.parse(JSON.stringify()) untuk data yang dikirim dari Server ke Client Component
