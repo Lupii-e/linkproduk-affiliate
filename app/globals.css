@@ -1,17 +1,18 @@
+/* app/globals.css - Menggunakan Sintaks yang Stabil */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   /* ======================================================= */
-  /* LIGHT MODE (DEFAULT) - Untuk kompatibilitas */
+  /* LIGHT MODE (DEFAULT) */
   /* ======================================================= */
   :root {
     --background: hsl(0 0% 100%);
     --foreground: hsl(240 10% 3.9%);
     --card: hsl(0 0% 100%);
     --card-foreground: hsl(240 10% 3.9%);
-    --primary: hsl(84 79% 51%); /* Hijau Neon */
+    --primary: hsl(84 79% 51%); 
     --primary-foreground: hsl(84 79% 5%); 
     --secondary: hsl(240 4.8% 95.9%);
     --secondary-foreground: hsl(240 5.9% 10%);
@@ -31,36 +32,27 @@
   /* DARK MODE (AKTIF) - Tema Hijau Neon */
   /* ======================================================= */
   .dark {
-    /* Background & Foreground */
-    --background: hsl(240 10% 3.9%); /* Warna dasar gelap */
-    --foreground: hsl(0, 0%, 16%); /* Warna teks terang */
-
-    /* Warna Primer (Hijau Neon) */
-    --primary: hsl(84 79% 51%); /* Warna aksen utama */
-    --primary-foreground: hsl(84 79% 5%); /* Teks kontras di atas tombol hijau */
-
-    /* Card, Border, Input */
-    --card: hsl(240 10% 3.9%); /* Warna card sama dengan background agar terlihat mulus */
+    --background: hsl(240 10% 3.9%);
+    --foreground: hsl(240 5.9% 90%);
+    --card: hsl(240 10% 3.9%);
     --card-foreground: hsl(240 5.9% 90%);
-    --border: hsl(240 3.7% 15.9%); /* Garis pemisah */
-    --input: hsl(240 3.7% 15.9%); /* Latar belakang input */
-    --ring: hsl(240 4.9% 83.9%); /* Fokus cincin */
-    
-    /* Warna Sekunder dan Muted */
+    --border: hsl(240 3.7% 15.9%); 
+    --input: hsl(240 3.7% 15.9%); 
+    --ring: hsl(240 4.9% 83.9%);
+    --primary: hsl(84 79% 51%); /* HIJAU NEON */
+    --primary-foreground: hsl(84 79% 5%);
     --secondary: hsl(240 3.7% 15.9%);
     --secondary-foreground: hsl(240 5.9% 90%);
     --muted: hsl(240 3.7% 15.9%);
     --muted-foreground: hsl(240 5% 64.9%);
     --accent: hsl(240 3.7% 15.9%);
     --accent-foreground: hsl(240 5.9% 90%);
-
     --destructive: hsl(0 62.8% 30.6%);
     --destructive-foreground: hsl(0 0% 98%);
   }
 }
 
 @layer base {
-  /* Pastikan styling diterapkan ke body */
   body {
     @apply bg-background text-foreground;
   }
