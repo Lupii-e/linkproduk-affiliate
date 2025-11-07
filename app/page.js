@@ -4,6 +4,10 @@ import { Inter } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'] });
 
+// PENTING: Implementasi Incremental Static Regeneration (ISR)
+// Halaman ini akan di-regenerate (dibangun ulang) secara otomatis setiap 60 detik.
+export const revalidate = 60; 
+
 export default async function Page() {
 
   let products = [];
@@ -11,24 +15,22 @@ export default async function Page() {
     const client = await clientPromise;
     const db = client.db("db_afiliasi"); // <-- Pastikan nama DB Anda benar
     
-    // FIX PENTING: Hanya ambil produk yang memiliki nama dan pastikan itu array yang valid
+    // FIX: Hanya ambil produk yang memiliki nama (mengabaikan data yang rusak)
     products = await db
       .collection("products")
-      .find({ nama_produk: { $ne: null, $ne: "" } }) // Filter data rusak saat build
+      .find({ nama_produk: { $ne: null, $ne: "" } }) 
       .sort({ _id: -1 })
       .toArray();
 
-    // Verifikasi final: jika bukan array, jadikan array kosong
     if (!Array.isArray(products)) {
         products = [];
     }
 
   } catch (e) {
     console.error("Gagal fetch produk di homepage:", e);
-    // Jika fetch gagal (misalnya koneksi), products tetap array kosong
   }
 
-  // Next.js memerlukan JSON.parse(JSON.stringify()) untuk data yang dikirim dari Server ke Client Component
+  // Next.js memerlukan konversi JSON untuk data yang dikirim dari Server ke Client Component
   const initialProductsSafe = JSON.parse(JSON.stringify(products));
 
   // Render halaman
