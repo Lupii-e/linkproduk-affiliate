@@ -1,12 +1,19 @@
-/* app/globals.css - Menggunakan Sintaks yang Stabil */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  /* ======================================================= */
-  /* LIGHT MODE (DEFAULT) */
-  /* ======================================================= */
+  /* --- CUSTOM FONT FACE (GALANO CLASSIC) --- */
+  @font-face {
+    font-family: 'Galano Classic';
+    /* Ganti ekstensi file ini (.woff2) jika file Anda berbeda (e.g., .otf) */
+    src: url('/fonts/GalanoClassic-Regular.woff2') format('woff2'); 
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  /* --- DARK MODE COLORS --- */
   :root {
     --background: hsl(0 0% 100%);
     --foreground: hsl(240 10% 3.9%);
@@ -28,9 +35,6 @@
     --radius: 0.5rem;
   }
 
-  /* ======================================================= */
-  /* DARK MODE (AKTIF) - Tema Hijau Neon */
-  /* ======================================================= */
   .dark {
     --background: hsl(240 10% 3.9%);
     --foreground: hsl(240 5.9% 90%);
@@ -39,7 +43,7 @@
     --border: hsl(240 3.7% 15.9%); 
     --input: hsl(240 3.7% 15.9%); 
     --ring: hsl(240 4.9% 83.9%);
-    --primary: hsl(84 79% 51%); /* HIJAU NEON */
+    --primary: hsl(84 79% 51%);
     --primary-foreground: hsl(84 79% 5%);
     --secondary: hsl(240 3.7% 15.9%);
     --secondary-foreground: hsl(240 5.9% 90%);
@@ -53,6 +57,7 @@
 }
 
 @layer base {
+  /* FIX: Hapus font-sans dari sini dan terapkan di layout.js */
   body {
     @apply bg-background text-foreground;
   }

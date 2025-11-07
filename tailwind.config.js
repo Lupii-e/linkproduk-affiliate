@@ -1,8 +1,7 @@
 /** @type {import('tailwindcss').Config} */
-const colors = require('tailwindcss/colors'); // <-- IMPORT WARNA STANDAR
+const colors = require('tailwindcss/colors');
 
 module.exports = {
-  // Pastikan dark mode diaktifkan
   darkMode: ["class"],
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -20,17 +19,19 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        // 'sans' akan menggunakan Galano Classic
+        sans: ['"Galano Classic"', 'sans-serif'], 
+      },
       colors: {
-        // Ini adalah fix untuk memastikan warna base Tailwind dikenal
         gray: colors.gray, 
-        slate: colors.slate, // <--- TAMBAHKAN SLATE DI SINI
-        
+        slate: colors.slate, 
+        // ... (sisanya sama)
         border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring)",
         background: "var(--background)",
         foreground: "var(--foreground)",
-        // ... (sisanya sama untuk primary, secondary, dst.)
         primary: {
           DEFAULT: "var(--primary)",
           foreground: "var(--primary-foreground)",
