@@ -1,14 +1,13 @@
-// components/ProductContainer.js
+// WAJIB: Komponen ini interaktif (Client Component)
 "use client";
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image'; 
-import { Input } from "@/components/ui/input"; 
+import { Input } from "@/components/ui/input"; // Menggunakan input Shadcn
 import { Search } from 'lucide-react'; 
 
 // --- FUNGSI TYPEWRITER ---
-const useTypewriterPlaceholder = (phrases, speed = 100) => {
-    // ... (kode Typewriter sama) ...
+const useTypewriterPlaceholder = (phrases, speed = 150) => {
     const [animatedText, setAnimatedText] = useState(''); 
     const [phraseIndex, setPhraseIndex] = useState(0);
     const [charIndex, setCharIndex] = useState(0);
@@ -41,8 +40,8 @@ const useTypewriterPlaceholder = (phrases, speed = 100) => {
     return animatedText; 
 };
 
-// --- Sub-Komponen: ProductCard (Hover dan Staggered) ---
-function ProductCard({ product, index }) {
+// --- Sub-Komponen: ProductCard (Fix Styling & Animasi) ---
+function ProductCard({ product, index }) { // Menerima index untuk animasi
   
   const PLACEHOLDER_URL = 'https://i.imgur.com/g8T0t6a.png'; 
   const safeImageUrl = product.gambar_url || PLACEHOLDER_URL;
@@ -54,22 +53,22 @@ function ProductCard({ product, index }) {
   };
 
   return (
-    // FIX: Styling Card harus ada di sini, termasuk animasi
+    // FIX: Class styling lengkap untuk card, termasuk animasi
     <a
       href={product.link_affiliate}
       onClick={handleClick} 
       rel="noopener noreferrer"
       key={product._id.toString()}
       
-      // Styling Card & Animasi Hover
+      // STYLING CARD LENGKAP: Memastikan bg-card, border, dan w-full ada
       className="w-full bg-card rounded-lg shadow-md overflow-hidden border border-border 
                  transition-transform duration-300 hover:scale-[1.03] hover:shadow-xl
                  
-                 /* ANIMASI BARU */
-                 animate-fade-in-up opacity-0" 
+                 /* ANIMASI BARU (Pastikan ini sesuai dengan tailwind.config.js) */
+                 animate-fade-in-up opacity-0" // opacity-0 diperlukan agar elemen dimulai transparan
       
       // Inline style untuk Staggered Delay (membuat card muncul satu per satu)
-      style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'forwards' }}
+      style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'forwards' }} // Perpanjang delay menjadi 0.1s
     >
       
       {/* BAGIAN GAMBAR */}
@@ -97,17 +96,37 @@ function ProductCard({ product, index }) {
 }
 
 
-// --- Komponen Utama: ProductContainer ---
+// --- Komponen Utama: ProductContainer (Fix Search Input & Grid) ---
 export default function ProductContainer({ initialProducts }) {
     const [query, setQuery] = useState('');
     const [products, setProducts] = useState(initialProducts); 
     const [isLoading, setIsLoading] = useState(false);
 
-    const suggestionPhrases = ["Kolor ijo...", "Tas LV...", "Sepatu Mahal...", "Produk Terbaik...."];
+    const suggestionPhrases = ["Sendal Biru...", "Meja Kerja...", "Sepatu Mahal...", "Produk Terbaik...."];
     const animatedPlaceholder = useTypewriterPlaceholder(suggestionPhrases); 
 
-    // Efek Live Search (Sama seperti sebelumnya)
-    useEffect(() => { /* ... kode useEffect ... */ }, [query, initialProducts]); 
+    // Efek Live Search
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            
+            if (query.length > 2) {
+                setIsLoading(true);
+                fetch(`/api/search?q=${query}`)
+                  .then(res => res.json())
+                  .then(data => {
+                    setProducts(Array.isArray(data) ? data : []); 
+                    setIsLoading(false);
+                  })
+                  .catch(() => setIsLoading(false));
+
+            } else {
+                setIsLoading(false);
+                setProducts(initialProducts); 
+            }
+        }, 300); 
+
+        return () => clearTimeout(timer);
+    }, [query, initialProducts]); 
 
     const finalPlaceholder = `Cari ${animatedPlaceholder}`;
 
@@ -120,7 +139,7 @@ export default function ProductContainer({ initialProducts }) {
                   type="text"
                   placeholder={finalPlaceholder} 
                   value={query}
-                  onChange={(e) => setFormData(prev => ({...prev, query: e.target.value}))} // FIX: Perlu update state untuk value input
+                  onChange={(e) => setQuery(e.target.value)} // FIX: Pastikan setQuery dipanggil
                   className="w-full p-4 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary pl-10" 
                 />
                 <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
@@ -132,6 +151,7 @@ export default function ProductContainer({ initialProducts }) {
             <div className="grid grid-cols-2 gap-2 w-full max-w-lg"> 
                 {products && products.map((product, index) => (
                   // Panggil ProductCard dan berikan index untuk delay animasi
+                  // Hapus div pembungkus jika card itu sendiri sudah memiliki w-full
                   <ProductCard key={product._id.toString()} product={product} index={index} />
                 ))}
             </div>
