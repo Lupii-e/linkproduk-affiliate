@@ -8,6 +8,7 @@ import { Search } from 'lucide-react';
 
 // --- FUNGSI TYPEWRITER ---
 const useTypewriterPlaceholder = (phrases, speed = 150) => {
+    // ... (kode Typewriter sama) ...
     const [animatedText, setAnimatedText] = useState(''); 
     const [phraseIndex, setPhraseIndex] = useState(0);
     const [charIndex, setCharIndex] = useState(0);
@@ -16,7 +17,6 @@ const useTypewriterPlaceholder = (phrases, speed = 150) => {
     useEffect(() => {
         const currentPhrase = phrases[phraseIndex];
         let timer;
-
         if (!isDeleting && charIndex < currentPhrase.length) {
             timer = setTimeout(() => {
                 setAnimatedText(prev => prev + currentPhrase[charIndex]);
@@ -33,14 +33,13 @@ const useTypewriterPlaceholder = (phrases, speed = 150) => {
             setIsDeleting(false);
             setPhraseIndex(prev => (prev + 1) % phrases.length);
         }
-
         return () => clearTimeout(timer);
     }, [charIndex, isDeleting, phraseIndex, speed, phrases]);
 
     return animatedText; 
 };
 
-// --- Sub-Komponen: ProductCard (Fix Padding & Gambar Rounded) ---
+// --- Sub-Komponen: ProductCard (Fix Styling & Animasi) ---
 function ProductCard({ product, index }) { 
   
   const PLACEHOLDER_URL = 'https://i.imgur.com/g8T0t6a.png'; 
@@ -53,7 +52,7 @@ function ProductCard({ product, index }) {
   };
 
   return (
-    // FIX: p-1 (padding lebih kecil) dan border-white/20 (border sedikit lebih tebal)
+    // FIX: Menggunakan styling Glassmorphism, Border 2, dan Padding 1
     <a
       href={product.link_affiliate}
       onClick={handleClick} 
@@ -69,14 +68,14 @@ function ProductCard({ product, index }) {
     >
       
       {/* BAGIAN GAMBAR - FIX: Tambahkan rounded-md untuk gambar */}
-      <div className="aspect-square w-full relative rounded-md overflow-hidden"> {/* overflow-hidden diperlukan agar gambar di dalamnya terpotong */}
+      <div className="aspect-square w-full relative rounded-md overflow-hidden"> 
         <Image
           src={safeImageUrl} 
           alt={product.nama_produk}
           fill 
           sizes="(max-width: 768px) 50vw, 33vw"
           style={{ objectFit: 'cover' }} 
-          className="bg-muted" // Gambar itu sendiri tidak perlu rounded lagi karena div pembungkusnya sudah
+          className="bg-muted" 
           priority={false}
           key={safeImageUrl} 
         />
@@ -130,21 +129,26 @@ export default function ProductContainer({ initialProducts }) {
     return (
         <div className="w-full max-w-lg">
             
-            {/* 1. SEARCH BAR (Input) */}
+            {/* 1. SEARCH BAR (Input - Glassmorphism Applied) */}
             <div className="w-full max-w-lg mb-8 relative">
                 <Input
                   type="text"
                   placeholder={finalPlaceholder} 
                   value={query}
                   onChange={(e) => setQuery(e.target.value)} 
-                  className="w-full p-4 rounded-lg shadow-md backdrop-blur-md bg-white/5 border border-white/10 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary pl-10" 
+                  
+                  // FIX STROKE: Hapus 'focus:ring' dan 'focus-visible:ring'
+                  className="w-full p-4 rounded-lg shadow-md backdrop-blur-md bg-white/5 border border-white/10 text-foreground placeholder:text-muted-foreground 
+                             pl-10 
+                             focus:outline-none focus-visible:outline-none 
+                             focus-visible:ring-0 focus-visible:ring-offset-0" 
                 />
                 <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                 
                 {isLoading && <span className="absolute right-4 top-1/2 -translate-y-1/2 text-primary text-sm">Loading...</span>}
             </div>
             
-            {/* 2. GRID PRODUK */}
+            {/* 2. GRID PRODUK (Staggered Fade-In) */}
             <div className="grid grid-cols-2 gap-2 w-full max-w-lg"> 
                 {products && products.map((product, index) => (
                   <ProductCard key={product._id.toString()} product={product} index={index} />
