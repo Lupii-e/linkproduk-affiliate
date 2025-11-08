@@ -1,10 +1,9 @@
 import './globals.css'
-// FIX: Mengganti Stack Sans yang tidak ditemukan dengan Plus Jakarta Sans (Stabil)
-import { Plus_Jakarta_Sans } from 'next/font/google'; 
+import { Plus_Jakarta_Sans } from 'next/font/google'; // (Atau font yang Anda gunakan)
 
 const plusJakartaSans = Plus_Jakarta_Sans({ 
   subsets: ['latin'],
-  variable: '--font-stack-sans', // Tetap gunakan variabel lama
+  variable: '--font-stack-sans', 
   weight: ['400', '600', '700'], 
 });
 
@@ -17,8 +16,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="id" className="dark"> 
       <body 
-        // Menerapkan font variable dan class styling
-        className={`${plusJakartaSans.variable} bg-background text-foreground font-sans`} 
+        // Hapus 'animate-dreamy-gradient' dan kembalikan 'bg-background'
+        className={`${plusJakartaSans.variable} text-foreground font-sans bg-background`} 
         suppressHydrationWarning
       >
         {children}

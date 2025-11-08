@@ -1,9 +1,9 @@
 // WAJIB: Komponen ini interaktif (Client Component)
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image'; 
-import { Input } from "@/components/ui/input"; // Menggunakan input Shadcn
+import { Input } from "@/components/ui/input"; 
 import { Search } from 'lucide-react'; 
 
 // --- FUNGSI TYPEWRITER ---
@@ -40,8 +40,8 @@ const useTypewriterPlaceholder = (phrases, speed = 150) => {
     return animatedText; 
 };
 
-// --- Sub-Komponen: ProductCard (Fix Styling & Animasi) ---
-function ProductCard({ product, index }) { // Menerima index untuk animasi
+// --- Sub-Komponen: ProductCard (Fix Padding & Gambar Rounded) ---
+function ProductCard({ product, index }) { 
   
   const PLACEHOLDER_URL = 'https://i.imgur.com/g8T0t6a.png'; 
   const safeImageUrl = product.gambar_url || PLACEHOLDER_URL;
@@ -53,39 +53,36 @@ function ProductCard({ product, index }) { // Menerima index untuk animasi
   };
 
   return (
-    // FIX: Class styling lengkap untuk card, termasuk animasi
+    // FIX: p-1 (padding lebih kecil) dan border-white/20 (border sedikit lebih tebal)
     <a
       href={product.link_affiliate}
       onClick={handleClick} 
       rel="noopener noreferrer"
       key={product._id.toString()}
       
-      // STYLING CARD LENGKAP: Memastikan bg-card, border, dan w-full ada
-      className="w-full bg-card rounded-lg shadow-md overflow-hidden border border-border 
+      className="w-full shadow-lg backdrop-blur-md bg-white/5 border-2 border-white/20 p-1 rounded-lg overflow-hidden 
                  transition-transform duration-300 hover:scale-[1.03] hover:shadow-xl
                  
-                 /* ANIMASI BARU (Pastikan ini sesuai dengan tailwind.config.js) */
-                 animate-fade-in-up opacity-0" // opacity-0 diperlukan agar elemen dimulai transparan
+                 animate-fade-in-up opacity-0" 
       
-      // Inline style untuk Staggered Delay (membuat card muncul satu per satu)
-      style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'forwards' }} // Perpanjang delay menjadi 0.1s
+      style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'forwards' }} 
     >
       
-      {/* BAGIAN GAMBAR */}
-      <div className="aspect-square w-full relative">
+      {/* BAGIAN GAMBAR - FIX: Tambahkan rounded-md untuk gambar */}
+      <div className="aspect-square w-full relative rounded-md overflow-hidden"> {/* overflow-hidden diperlukan agar gambar di dalamnya terpotong */}
         <Image
           src={safeImageUrl} 
           alt={product.nama_produk}
           fill 
           sizes="(max-width: 768px) 50vw, 33vw"
           style={{ objectFit: 'cover' }} 
-          className="bg-muted"
+          className="bg-muted" // Gambar itu sendiri tidak perlu rounded lagi karena div pembungkusnya sudah
           priority={false}
           key={safeImageUrl} 
         />
       </div>
       
-      {/* Bagian Judul (Rata Kiri, Dua Baris) */}
+      {/* Bagian Judul */}
       <div className="p-3 text-left"> 
         <h3 className="text-foreground font-semibold text-sm line-clamp-2" title={product.nama_produk}>
           {product.nama_produk} 
@@ -96,7 +93,7 @@ function ProductCard({ product, index }) { // Menerima index untuk animasi
 }
 
 
-// --- Komponen Utama: ProductContainer (Fix Search Input & Grid) ---
+// --- Komponen Utama: ProductContainer ---
 export default function ProductContainer({ initialProducts }) {
     const [query, setQuery] = useState('');
     const [products, setProducts] = useState(initialProducts); 
@@ -139,19 +136,17 @@ export default function ProductContainer({ initialProducts }) {
                   type="text"
                   placeholder={finalPlaceholder} 
                   value={query}
-                  onChange={(e) => setQuery(e.target.value)} // FIX: Pastikan setQuery dipanggil
-                  className="w-full p-4 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary pl-10" 
+                  onChange={(e) => setQuery(e.target.value)} 
+                  className="w-full p-4 rounded-lg shadow-md backdrop-blur-md bg-white/5 border border-white/10 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary pl-10" 
                 />
                 <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                 
                 {isLoading && <span className="absolute right-4 top-1/2 -translate-y-1/2 text-primary text-sm">Loading...</span>}
             </div>
             
-            {/* 2. GRID PRODUK (Staggered Fade-In) */}
+            {/* 2. GRID PRODUK */}
             <div className="grid grid-cols-2 gap-2 w-full max-w-lg"> 
                 {products && products.map((product, index) => (
-                  // Panggil ProductCard dan berikan index untuk delay animasi
-                  // Hapus div pembungkus jika card itu sendiri sudah memiliki w-full
                   <ProductCard key={product._id.toString()} product={product} index={index} />
                 ))}
             </div>

@@ -41,7 +41,7 @@ export default async function Page() {
         </div>
         <div className="ml-4 text-left">
           <h1 className="text-xl font-bold tracking-tight">LINKPRODUK</h1>
-          <p className="text-muted-foreground text-sm">Koleksi produk unik dan menarik</p>
+          <p className="text-muted-foreground text-sm">Koleksi Linkproduk</p>
         </div>
       </div>
 
