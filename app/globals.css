@@ -3,9 +3,16 @@
 @tailwind utilities;
 
 @layer base {
+  /* --- CUSTOM FONT FACE --- */
+  @font-face {
+    font-family: 'Galano Classic';
+    src: url('/fonts/GalanoClassic-Regular.woff2') format('woff2'); 
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
   
-  
-  /* --- DARK MODE COLORS --- */
+  /* --- LIGHT MODE & DARK MODE COLORS --- */
   :root {
     --background: hsl(0 0% 100%);
     --foreground: hsl(240 10% 3.9%);
@@ -49,7 +56,6 @@
 }
 
 @layer base {
-  /* FIX: Hapus font-sans dari sini dan terapkan di layout.js */
   body {
     @apply bg-background text-foreground;
   }

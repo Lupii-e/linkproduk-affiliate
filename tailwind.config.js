@@ -3,10 +3,11 @@ const colors = require('tailwindcss/colors');
 
 module.exports = {
   darkMode: ["class"],
+  // FIX: PASTIKAN ARRAY 'content' TERISI LENGKAP
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}', // Ini harus ada
     './src/**/*.{js,ts,jsx,tsx,mdx}',
 	],
   prefix: "",
@@ -19,16 +20,14 @@ module.exports = {
       },
     },
     extend: {
-      // PENERAPAN FONT BARU
       fontFamily: {
+        // 'sans' akan menggunakan Plus Jakarta Sans (atau Galano Classic jika Anda mengaturnya)
         sans: ['var(--font-stack-sans)', 'sans-serif'], 
       },
-      // ... (sisa extend lainnya) ...
       colors: {
         gray: colors.gray, 
         slate: colors.slate, 
         border: "var(--border)",
-        // ... (sisanya sama untuk primary, secondary, dst.)
         input: "var(--input)",
         ring: "var(--ring)",
         background: "var(--background)",
@@ -67,7 +66,6 @@ module.exports = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      // ... (sisanya sama untuk keyframes dan animation)
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -77,10 +75,16 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        // Keyframe Fade In Up
+        'fade-in-up': {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        'fade-in-up': 'fade-in-up 0.75s ease-out forwards',
       },
     },
   },
