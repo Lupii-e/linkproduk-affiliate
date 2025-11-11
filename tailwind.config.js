@@ -11,12 +11,18 @@ module.exports = {
 	],
   prefix: "",
   theme: {
-    container: { /* ... (kode container) ... */ },
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       fontFamily: {
-        sans: ['var(--font-stack-sans)', 'sans-serif'],
-        // TAMBAHKAN FONT BARU: 'poppins'
-        poppins: ['var(--font-poppins)', 'sans-serif'], 
+        // 4. Ganti font-sans ke variabel --font-montserrat
+        sans: ['var(--font-montserrat)', 'sans-serif'], 
+        // Hapus 'poppins' jika masih ada
       },
       colors: {
         // ... (semua kode warna Anda) ...

@@ -8,7 +8,6 @@ import { Search } from 'lucide-react';
 
 // --- FUNGSI TYPEWRITER ---
 const useTypewriterPlaceholder = (phrases, speed = 150) => {
-    // ... (kode Typewriter sama) ...
     const [animatedText, setAnimatedText] = useState(''); 
     const [phraseIndex, setPhraseIndex] = useState(0);
     const [charIndex, setCharIndex] = useState(0);
@@ -52,7 +51,7 @@ function ProductCard({ product, index }) {
       key={product._id.toString()}
       
       className="w-full shadow-lg backdrop-blur-md bg-white/5 
-                 border border-white/10 p-1 rounded-lg overflow-hidden {/* <-- FIX STROKE & PADDING */}
+                 border border-white/10 p-1 rounded-lg overflow-hidden 
                  transition-transform duration-300 hover:scale-[1.03] hover:shadow-xl
                  animate-fade-in-up opacity-0" 
       
@@ -73,10 +72,10 @@ function ProductCard({ product, index }) {
         />
       </div>
       
-      {/* Bagian Judul - FIX: Font Poppins, padding, ukuran */}
-      <div className="p-2 text-left"> {/* <-- Padding dikurangi */}
+      {/* Bagian Judul - FIX: Font Poppins -> font-sans (Montserrat), font-medium -> font-normal (Regular) */}
+      <div className="p-2 text-left"> 
         <h3 
-          className="text-foreground font-poppins font-medium text-xs line-clamp-2" /* <-- FIX FONT & UKURAN */
+          className="text-foreground font-sans font-normal text-xs line-clamp-2" /* <-- FIX FONT & WEIGHT */
           title={product.nama_produk}
         >
           {product.nama_produk} 
@@ -93,7 +92,7 @@ export default function ProductContainer({ initialProducts }) {
     const [products, setProducts] = useState(initialProducts); 
     const [isLoading, setIsLoading] = useState(false);
 
-    const suggestionPhrases = ["Sendal Biru...", "Meja Kerja...", "Sepatu Mahal...", "Produk Terbaik...."];
+    const suggestionPhrases = ["Kode Produk...", ""];
     const animatedPlaceholder = useTypewriterPlaceholder(suggestionPhrases); 
 
     // Efek Live Search
@@ -130,7 +129,7 @@ export default function ProductContainer({ initialProducts }) {
                   type="text"
                   placeholder={finalPlaceholder} 
                   value={query}
-                  // FIX PENTING: Pastikan onChange ada di sini
+                  // FIX PENTING: Mengembalikan onChange agar bisa diketik
                   onChange={(e) => setQuery(e.target.value)} 
                   className="w-full p-4 rounded-lg shadow-md backdrop-blur-md bg-white/5 border border-white/10 text-foreground placeholder:text-muted-foreground 
                              pl-10 
