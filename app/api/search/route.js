@@ -8,7 +8,6 @@ export const dynamic = 'force-dynamic';
 // --- FUNGSI GET (Mencari produk menggunakan Atlas Search) ---
 export async function GET(request) {
   try {
-    // FIX: Menggunakan request.url memaksa render dinamis
     const { searchParams } = new URL(request.url); 
     const query = searchParams.get('q');
 
@@ -21,20 +20,37 @@ export async function GET(request) {
     const client = await clientPromise;
     const db = client.db("db_afiliasi"); 
 
-    // Ini adalah Pipeline untuk Atlas Search
+    // --- PIPELINE BARU MENGGUNAKAN "COMPOUND" ---
     const pipeline = [
       {
         $search: {
-          index: "search_produk", // <-- Ganti jika nama Indeks Search Anda beda
-          "autocomplete": {
-            "query": query,
-            "path": "nama_produk", 
-            "fuzzy": { "maxEdits": 1 } 
+          index: "search_produk", // Nama Indeks Search Anda
+          "compound": {
+            "should": [
+              {
+                // 1. SKOR TINGGI: Kecocokan Awalan (Untuk Kode "304")
+                "autocomplete": {
+                  "query": query,
+                  "path": "nama_produk",
+                  // Beri skor 10x lebih tinggi jika cocok di awalan
+                  "score": { "boost": { "value": 10 } } 
+                }
+              },
+              {
+                // 2. SKOR NORMAL: Kecocokan Teks (Untuk Nama "Sepatu")
+                "text": {
+                  "query": query,
+                  "path": "nama_produk",
+                  "fuzzy": { "maxEdits": 1 } // Tetap izinkan salah ketik untuk nama
+                }
+              }
+            ]
           }
         }
       },
+      // --- AKHIR PIPELINE BARU ---
       {
-        // FIX: Hanya kembalikan produk yang memiliki URL gambar yang valid
+        // Filter produk yang tidak punya URL gambar
         $match: {
           gambar_url: { $ne: null, $ne: "" } 
         }
